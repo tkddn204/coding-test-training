@@ -60,14 +60,8 @@ void solve() {
   cin >> v1 >> v2;
   
   int path[] = {1, v1, v2, n};
-  int sum1 = go(path);
   int path2[] = {1, v2, v1, n};
-  int sum2 = go(path2);
-  if (sum1 == -1 or sum2 == -1) {
-    cout << -1;
-  } else {
-    cout << (min(sum1, sum2));
-  }
+  cout << (min(go(path), go(path2)));
 }
 
 int main() {
