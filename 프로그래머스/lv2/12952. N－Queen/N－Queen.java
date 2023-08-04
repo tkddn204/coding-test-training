@@ -28,7 +28,7 @@ class Solution {
             }
 
             for (int i = 0; i < n; i++) {
-                if (pan[k][i] == 0 && check(k, i)) {
+                if (check(k, i)) {
                     pan[k][i] = 1;
                     bt(k + 1);
                     pan[k][i] = 0;
