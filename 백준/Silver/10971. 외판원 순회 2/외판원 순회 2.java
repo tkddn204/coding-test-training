@@ -35,12 +35,10 @@ class Main {
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            vst = new boolean[n];
-            vst[i] = true;
-            start = i;
-            backtracking(i, 0, 1);
-        }
+        vst = new boolean[n];
+        vst[0] = true;
+        start = 0;
+        backtracking(0, 0, 1);
         res.append(minCost);
     }
 
