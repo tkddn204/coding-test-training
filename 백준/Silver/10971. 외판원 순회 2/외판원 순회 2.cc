@@ -4,53 +4,46 @@ using namespace std;
 #define endl "\n"
 
 int n;
-int w[11][11];
-bool vst[11];
-int minCost = INT_MAX;
-int start;
+int w[17][17];
+int dp[17][(1 << 16) + 1];
 
-void go(int a, int cost, int cnt) {
-  if (cnt == n) {
-    if (w[a][start] == 0) return;
-    cost += w[a][start];
-    minCost = min(minCost, cost);
-    return;
+int dfs(int cur, int mask) {
+  if (mask == (1 << n) - 1) {
+    return w[cur][0] > 0 ? w[cur][0] : 1e9;
+  }
+  if (dp[cur][mask] > 0) {
+    return dp[cur][mask];
   }
 
-  for (int b = 0; b < n; b++) {
-    if (vst[b] or w[a][b] == 0) continue;
-    vst[b] = true;
-    go(b, cost + w[a][b], cnt + 1);
-    vst[b] = false;
+  dp[cur][mask] = 1e9;
+  
+  for (int i = 0; i < n; i++) {
+    if (w[cur][i] == 0) continue;
+    if (mask & (1 << i)) continue;
+    int cost = dfs(i, mask | (1 << i));
+    dp[cur][mask] = min(dp[cur][mask], w[cur][i] + cost);
   }
+
+  return dp[cur][mask];
 }
 
 void solve() {
   cin >> n;
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
-      int c;
-      cin >> c;
-      w[i][j] = c;
+      cin >> w[i][j];
     }
   }
-  
-  for (int i = 0; i < n; i++) {
-    fill(vst, vst + n, false);
-    vst[i] = true;
-    start = i;
-    go(i, 0, 1);
-  }
-  cout << minCost;
+
+  cout << dfs(0, 1);
 }
 
 int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(0);
 #ifndef ONLINE_JUDGE
   freopen("input.txt", "r", stdin);
   freopen("output.txt", "w", stdout);
-#else
-  ios_base::sync_with_stdio(false);
-  cin.tie(0);
 #endif
   solve();
   return 0;
