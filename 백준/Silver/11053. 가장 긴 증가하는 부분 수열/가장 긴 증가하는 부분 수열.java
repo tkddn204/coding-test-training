@@ -12,13 +12,12 @@ class Main {
         dp[0] = 1;
         int maxCnt = 1;
         for (int i = 1; i < n; i++) {
-            int m = 0;
+            dp[i] = 1;
             for (int j = 0; j < i; j++) {
-                if (inp[j] < inp[i]) {
-                    m = Math.max(m, dp[j]);
+                if (inp[j] < inp[i] && dp[i] < dp[j] + 1) {
+                    dp[i]++;
                 }
             }
-            dp[i] = m + 1;
             maxCnt = Math.max(maxCnt, dp[i]);
         }
         res.append(maxCnt);
