@@ -4,51 +4,40 @@ using namespace std;
 #define endl "\n"
 
 int n, k;
-int tree[51];
+vector<int> tree[51];
 int cnt;
 
-void remove(int root) {
-  tree[root] = -1;
-  vector<int> child;
-  for (int i = 0; i < n; i++) {
-    if (tree[i] == root) {
-      child.push_back(i);
-    }
-  }
+bool dfs(int root) {  
+  if (root == k) return true;
 
-  for (int c : child) remove(c);
-}
-
-void leaf(int root) {
-  vector<int> child;
-  for (int i = 0; i < n; i++) {
-    if (tree[i] == root) {
-      child.push_back(i);
-    }
-  }
-
-  if (child.empty()) {
+  if (tree[root].empty()) {
     cnt++;
-    return;
+    return false;
   }
 
-  for (int c : child) leaf(c);
+  for (int child : tree[root]) {
+    bool isFind = dfs(child);
+    if (isFind and tree[root].size() == 1) {
+      cnt++;
+    }
+  }
+  return false;
 }
 
 void solve() {
   cin >> n;
-  fill(tree, tree + 51, -1);
 
   int root = -1;
   for (int i = 0; i < n; i++) {
-    cin >> tree[i];
-    if (tree[i] == -1) root = i;
+    int e;
+    cin >> e;
+    if (e == -1) root = i;
+    else tree[e].push_back(i);
   }
   cin >> k;
-
+  
   if (k != root) {
-    remove(k);
-    leaf(root);
+    dfs(root);
   }
 
   cout << cnt;
