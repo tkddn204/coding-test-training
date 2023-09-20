@@ -5,15 +5,16 @@ class Solution {
     
     private int getTime(String time) {
         String[] splited = time.split(":");
-        int hour = Integer.parseInt(splited[0]);
-        int min = Integer.parseInt(splited[1]);
-        return hour * 60 + min;
+        int H = Integer.parseInt(splited[0]);
+        int M = Integer.parseInt(splited[0]);
+        return H * 60 + M;
     }
     
     public int[] solution(int[] fees, String[] records) {
-        int[] car = new int[10001];
-        Arrays.fill(car, -1);
-        int[] time = new int[10001];
+        int[] answer = {};
+        int[] sum = new int[10001];
+        
+        Map<Integer, Integer> car = new TreeMap<>();
         
         for (String r : records) {
             String[] splited = r.split(" ");
@@ -22,36 +23,24 @@ class Solution {
             String oper = splited[2];
             
             if (oper.equals("IN")) {
-                car[carnum] = t;
+                car.put(carnum, t);
             } else {
-                if (car[carnum] == -1) continue;
-                time[carnum] += t - car[carnum];
-                car[carnum] = -1;
-            }
+                int time = t - car.get(carnum);
+                if (fees[0] >= time) sum[carnum] += fees[1];
+                else {
+                    int overtime = time - fees[0];
+                    System.out.println(time + " " + fees[0]);
+                    sum[carnum] += fees[1] +
+                        overtime * (int)(Math.ceil((double)time / (double)10) * fees[3] / fees[2]);
+                }
+            }    
         }
         
-        
-        int last = getTime("23:59");
-        for (int i = 0; i < 10001; i++) {
-            if (car[i] == -1) continue;
-            time[i] += last - car[i];
-        }
-        
-        ArrayList<Integer> res = new ArrayList<>();
-        for (int i = 0; i < 10001; i++) {
-            if (time[i] == 0) continue;
-            
-            if (fees[0] >= time[i]) {
-                res.add(fees[1]);
-            } else {
-                double overtime = time[i] - fees[0];
-                res.add(fees[1] + (int)(Math.ceil((double)overtime / fees[2]) * fees[3]));
-            }
-        }
-        
-        int[] answer = new int[res.size()];
-        for (int i = 0; i < res.size(); i++) {
-            answer[i] = res.get(i);
+        int size = car.keySet().size();
+        answer = new int[size];
+        int idx = 0;
+        for (int num : car.keySet()) {
+           answer[idx++] = sum[num];
         }
         
         return answer;
