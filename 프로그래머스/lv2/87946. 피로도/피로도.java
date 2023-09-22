@@ -6,7 +6,7 @@ class Solution {
     int answer;
     boolean[] vst;
     
-    void dfs(int k, int x, int[][] dungeons, int cnt) {
+    void dfs(int k, int[][] dungeons, int cnt) {
         answer = Math.max(answer, cnt);
         
         for (int i = 0; i < n; i++) {
@@ -14,7 +14,7 @@ class Solution {
             if (k < dungeons[i][0]) continue;
             vst[i] = true;
             
-            dfs(k - dungeons[i][1], i + 1, dungeons, cnt + 1);
+            dfs(k - dungeons[i][1], dungeons, cnt + 1);
             
             vst[i] = false;
         }
@@ -25,12 +25,7 @@ class Solution {
         this.n = dungeons.length;
         this.vst = new boolean[n];
         
-        for (int i = 0; i < n; i++) {
-            if (k < dungeons[i][0]) continue;
-            vst[i] = true;
-            dfs(k - dungeons[i][1], i, dungeons, 1);
-            vst[i] = false;
-        }
+        dfs(k, dungeons, 0);
         
         return answer;
     }
