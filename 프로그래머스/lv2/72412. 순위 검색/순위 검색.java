@@ -40,7 +40,7 @@ class Solution {
         dfs(k + 1, query + "-", info);
         dfs(k + 1, query + info[k], info);
     }
-    
+
     private int binarySearch(String query, int score) {
         List<Integer> list = map.get(query);
         int st = 0;
