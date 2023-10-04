@@ -1,6 +1,6 @@
 # [level 3] 길 찾기 게임 - 42892 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42892) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/42892?language=java) 
 
 ### 성능 요약
 

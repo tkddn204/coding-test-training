@@ -3,43 +3,49 @@ import java.util.stream.*;
 
 class Solution {
     
-    class Node {
-        int x, y, num;
-        Node left, right;
-        Node(int x, int y, int num) {
+    class Pair {
+        int x, num;
+        Pair(int x, int num) {
             this.x = x;
-            this.y = y;
             this.num = num;
         }
     }
     
-    Node[] tree;
+    int[] tree;
     List<Integer> pre, post;
+    Map<Integer, ArrayList<Pair>> map;
     
-    void addTree(Node parent, Node child) {
-        if (parent.x > child.x) {
-            if (parent.left == null) parent.left = child;
-            else addTree(parent.left, child);
-        } else {
-            if (parent.right == null) parent.right = child;
-            else addTree(parent.right, child);
-        }
-    }
-    
-    private void preorder(Node root) {
-        if (root == null) return;
+    void addTree(int idx, int level, Pair node, int st, int en) {
+        tree[idx] = node.num;
         
-        pre.add(root.num);
-        preorder(root.left);
-        preorder(root.right);
+        level--;
+        while (level > 0 && map.get(level).isEmpty()) level--;
+        for (Pair nxt : map.get(level)) {
+            if (st <= nxt.x && nxt.x < node.x) {
+                addTree(idx * 2, level, nxt, st, node.x);
+            } else if (node.x < nxt.x && nxt.x <= en) {
+                addTree(idx * 2 + 1, level, nxt, node.x, en);
+            }
+        }
+        
     }
     
-    private void postorder(Node root) {
-        if (root == null) return;
+    private void preorder(int root) {
+        if (root >= tree.length) return;
+        if (tree[root] == 0) return;
+        
+        pre.add(tree[root]);
+        preorder(root * 2);
+        preorder(root * 2 + 1);
+    }
     
-        postorder(root.left);
-        postorder(root.right);
-        post.add(root.num);
+    private void postorder(int root) {
+        if (root >= tree.length) return;
+        if (tree[root] == 0) return;
+    
+        postorder(root * 2);
+        postorder(root * 2 + 1);
+        post.add(tree[root]);
     }
     
     public int[][] solution(int[][] nodeinfo) {
@@ -48,25 +54,28 @@ class Solution {
         pre = new ArrayList<>();
         post = new ArrayList<>();
         
-        tree = new Node[n];
-        for (int i = 0; i < n; i++) {
-            tree[i] = new Node(nodeinfo[i][0], nodeinfo[i][1], i + 1);
+        tree = new int[100001];
+        map = new HashMap<>();
+        for (int i = 0; i < 100001; i++) {
+            map.put(i, new ArrayList<>());
         }
         
-        Arrays.sort(tree, (a, b) -> {
-            if (a.y == b.y) {
-                return Integer.compare(a.x, b.x);
+        for (int i = 0; i < n; i++) {
+            nodeinfo[i] = new int[]{nodeinfo[i][0], nodeinfo[i][1], i + 1};
+            map.get(nodeinfo[i][1]).add(new Pair(nodeinfo[i][0], nodeinfo[i][2]));
+        }
+        
+        Arrays.sort(nodeinfo, (a, b) -> {
+            if (a[1] == b[1]) {
+                return Integer.compare(a[0], b[0]);
             }
-            return Integer.compare(b.y, a.y);
+            return Integer.compare(b[1], a[1]);
         });
         
-        Node root = tree[0];
-        for (int i = 1; i < n; i++) {
-            addTree(root, tree[i]);
-        }
+        addTree(1, nodeinfo[0][1], map.get(nodeinfo[0][1]).get(0), 0, nodeinfo[0][2] * 2);
         
-        preorder(root);
-        postorder(root);
+        preorder(1);
+        postorder(1);
         
         answer = new int[2][];
         answer[0] = pre.stream().mapToInt(Integer::intValue).toArray();
