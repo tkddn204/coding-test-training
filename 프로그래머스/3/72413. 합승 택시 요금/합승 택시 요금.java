@@ -50,11 +50,12 @@ class Solution {
             graph.get(fare[1]).add(new Edge(fare[0], fare[2]));
         }
         
-        int[] both = dstra(n, s);
+        int[] cost = dstra(n, s);
+        int[] acost = dstra(n, a);
+        int[] bcost = dstra(n, b);
         for (int i = 1; i <= n; i++) {
-            int[] one = dstra(n, i);
-            if (both[i] == (int)1e9 || one[a] == (int)1e9 || one[b] == (int)1e9) continue;
-            answer = Math.min(answer, both[i] + one[a] + one[b]);
+            if (cost[i] == (int)1e9 || acost[i] == (int)1e9 || bcost[i] == (int)1e9) continue;
+            answer = Math.min(answer, cost[i] + acost[i] + bcost[i]);
         }
         
         return answer;
