@@ -3,25 +3,27 @@ using namespace std;
 
 #define endl "\n"
 
-vector<pair<int,int>> meeting;
+vector<pair<int, int>> arr;
+priority_queue<int, vector<int>, greater<>> pq;
 
 void solve() {
   int n;
   cin >> n;
-  for (int i = 0; i < n ; i++) {
-    int a, b;
-    cin >> a >> b;
-    meeting.push_back({a, 1});
-    meeting.push_back({b, -1});
+  for (int i = 0; i < n; i++) {
+    int s, t;
+    cin >> s >> t;
+    arr.push_back({s, t});
   }
-  sort(meeting.begin(), meeting.end());
+  sort(arr.begin(), arr.end());
   
-  int cnt = 0;
-  int res = 0;
-  for (auto [t, v] : meeting) {
-    res = max(res, cnt += v);
+  auto [a, b] = arr[0];
+  pq.push(b);
+  for (int i = 1; i < n; i++) {
+    auto [a, b] = arr[i];
+    if (pq.top() <= a) pq.pop();
+    pq.push(b);
   }
-  cout << res;
+  cout << pq.size();
 }
 
 int main() {
