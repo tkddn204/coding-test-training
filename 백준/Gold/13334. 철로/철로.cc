@@ -12,8 +12,6 @@ void solve() {
   for (int i = 0; i < n; i++) {
     int s, t;
     cin >> s >> t;
-    s += 100000000;
-    t += 100000000;
     if (s > t) swap(s, t);
     arr.push_back({s, t});
   }
