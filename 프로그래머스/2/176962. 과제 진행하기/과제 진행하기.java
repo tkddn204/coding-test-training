@@ -20,10 +20,6 @@ class Solution {
             this.play = play;
         }
         
-        int expectedTime() {
-            return this.start + this.play;
-        }
-        
         public int compareTo(Plan p) {
             return Integer.compare(this.start, p.start);
         }
@@ -41,45 +37,47 @@ class Solution {
             planQue.add(new Plan(name, start, play));
         }
         
+        for (Plan plan : planQue) {
+            System.out.println(plan.name + " " + plan.start + " " + plan.play);
+        }
+        
         Stack<Plan> stack = new Stack<>();
         Plan cur = planQue.poll();
         
         int time = cur.start;
         while (time < 60 * 24 + 101) {
-            Plan nxt = planQue.peek();
             
             // 진행 중이던 과제가 끝난 경우
-            if (cur != null && cur.expectedTime() == time) {
+            if (cur != null && cur.start + cur.play == time) {
                 answer.add(cur.name);
                 cur = null;
             }
             
-            if (nxt.start == time) { // 새로운 과제를 시작할 시각이 되었을 때
+            // 새로운 과제를 시작할 시각이 되었을 때
+            Plan nxt = planQue.peek();
+            if (nxt.start == time) { 
                 if (cur != null) { // 진행중인 과제가 있을 때 스택에 넣음
                     cur.play -= time - cur.start;
                     stack.add(cur);
                 }
                 cur = planQue.poll();
-            } else if (cur == null && !stack.empty()) { // 멈춰둔 과제가 있을 경우
+            
+            // 멈춰둔 과제가 있을 경우
+            } else if (cur == null && !stack.empty()) {
                 cur = stack.pop();
                 cur.start = time;
             }
             
+            // 큐가 비었다 = 현재 일이 마지막 과제일 경우
             if (planQue.isEmpty()) {
-                if (cur != null) answer.add(cur.name);
+                answer.add(cur.name);
+                while (!stack.empty()) {
+                    answer.add(stack.pop().name);
+                }
                 break;
             }
             time++;
         }
-        
-        while (!stack.empty()) {
-            answer.add(stack.pop().name);
-        }
-        
-        // while (!planQue.isEmpty()) {
-        //     Plan plan = planQue.poll();
-        //     System.out.println(plan.name + " " + plan.start + " " + plan.play);
-        // }
         
         return answer.toArray(new String[0]);
     }
