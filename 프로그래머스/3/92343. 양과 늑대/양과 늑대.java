@@ -13,17 +13,17 @@ class Solution {
         
         answer = Math.max(answer, sheep);
         
+        int temp = info[cur];
+        info[cur] = -1;
+        vst[cur][sheep][wolf] = true;
+
         for (int nxt : tree.get(cur)) {
             if (vst[nxt][sheep][wolf]) continue;
-            
-            info[cur] -= 2;
-            vst[cur][sheep][wolf] = true;
-            
             dfs(nxt, sheep, wolf);
-            
-            info[cur] += 2;
-            vst[cur][sheep][wolf] = false;
         }
+        
+        info[cur] = temp;
+        vst[cur][sheep][wolf] = false;
     }
     
     public int solution(int[] _info, int[][] edges) {
