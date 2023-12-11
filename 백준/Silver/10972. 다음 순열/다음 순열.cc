@@ -2,6 +2,7 @@
 using namespace std;
 
 #define endl "\n"
+#define ll long long
 
 int arr[10001];
 
@@ -14,21 +15,19 @@ void solve() {
   while (i > 0 && arr[i - 1] >= arr[i]) i--;
 
   if (i == 0) {
-    cout << -1 << endl;
+    cout << -1;
     return;
   }
 
   int j = n - 1;
-  while (arr[j] <= arr[i - 1]) j--;
-  swap(arr[j], arr[i - 1]);
+  while (j >= i && arr[j] <= arr[i - 1]) j--;
+  swap(arr[i - 1], arr[j]);
   
-  int k = n - 1;
-  while (i < k) swap(arr[i++], arr[k--]);
-  
+  reverse(arr + i, arr + n);
+
   for (int i = 0; i < n; i++) {
     cout << arr[i] << ' ';
   }
-  cout << endl;
 }
 
 int main() {
