@@ -17,10 +17,10 @@ class Solution {
         int size = _times.length;
         
         long st = 0;
-        long en = Long.MAX_VALUE;
-        while (st <= en) {
-            long mid = (st + en) / 2;
-            if (go((long) n, mid)) st = mid + 1;
+        long en = Long.MAX_VALUE - 1;
+        while (st < en) {
+            long mid = (st + en + 1) / 2;
+            if (go((long) n, mid)) st = mid;
             else {
                 en = mid - 1;
                 answer = mid;
